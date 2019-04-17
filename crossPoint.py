@@ -22,10 +22,10 @@ import numpy as np
 # return 交差地点
 def calc_cross_point(side1: Side, side2: Side) -> Point:
     # 交差地点計算
-    Q1: Point = sides[0].side_to
-    Q2: Point = sides[1].side_to
-    P1: Point = sides[0].side_from
-    P2: Point = sides[1].side_from
+    Q1: Point = side1.side_to
+    Q2: Point = side2.side_to
+    P1: Point = side1.side_from
+    P2: Point = side2.side_from
     mat_A = np.matrix([
         [Q1.x - P1.x, -(Q2.x - P2.x)], 
         [Q1.y - P1.y, -(Q2.y - P2.y)]
@@ -45,25 +45,3 @@ def calc_cross_point(side1: Side, side2: Side) -> Point:
 
     # 交差地点がない場合Noneを返す
     return None
-
-    # input
-input_nums = list(map(int, input().split()))
-# if len(input_nums) != 4:
-
-N, M, P, Q = input_nums
-points = []
-for i in range(N):
-    x, y = map(int, input().split())
-    points.append(Point(x, y))
-
-sides: [Side] = []
-for i in range(M):
-    fr, to = map(int, input().split())
-    sides.append(Side(points[fr - 1], points[to - 1]))
-
-if calc_cross_point(sides[0], sides[1]) == None:
-    print('NA') 
-else:
-    print()
-
-print(calc_cross_point(sides[0], sides[1]))
