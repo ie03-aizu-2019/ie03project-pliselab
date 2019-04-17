@@ -1,7 +1,7 @@
-from crossPoint import Point
-from crossPoint import Side
-from crossPoint import calc_cross_point
-from crossPoint import list_cross_point
+from cross_point import Point
+from cross_point import Side
+from cross_point import calc_cross_point
+from cross_point import list_cross_point
 
 # input
 input_nums = list(map(int, input().split()))
