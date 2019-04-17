@@ -1,6 +1,7 @@
 from crossPoint import Point
 from crossPoint import Side
 from crossPoint import calc_cross_point
+from crossPoint import list_cross_point
 
 # input
 input_nums = list(map(int, input().split()))
@@ -17,9 +18,6 @@ for i in range(M):
     fr, to = map(int, input().split())
     sides.append(Side(points[fr - 1], points[to - 1]))
 
-if calc_cross_point(sides[0], sides[1]) == None:
-    print('NA') 
-else:
-    print()
-
-print(calc_cross_point(sides[0], sides[1]))
+cross_points = list_cross_point(sides)
+for point in cross_points:
+    print(f'{point.x} {point.y}')
