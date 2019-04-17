@@ -13,7 +13,8 @@ class Side:
     def __init__(self, f: Point, t: Point):
         self.side_from = f
         self.side_to = t
-    
+
+
 import numpy as np
 
 # 辺を２つ受け取り交差地点を計算する
@@ -65,27 +66,4 @@ if calc_cross_point(sides[0], sides[1]) == None:
 else:
     print()
 
-print(calc_cross_point(calc_cross_point(sides[0], sides[1]))
-
-
-# 1
-'''
-4 2 0 0
-0 0
-5 5
-2 5
-7 1
-1 2
-3 4
-'''
-
-# 2
-'''
-4 2 0 0 
-0 0
-5 5
-2 5
-7 1 
-1 3 
-2 4
-'''
+print(calc_cross_point(sides[0], sides[1]))
