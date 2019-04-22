@@ -1,19 +1,17 @@
-from cross_point import Point
-from cross_point import Side
-from cross_point import calc_cross_point
-from cross_point import list_cross_point
+from typing import List, Optional
+
+from road_construction import Point, Side, calc_cross_point, list_cross_point
 
 # input
 input_nums = list(map(int, input().split()))
-# if len(input_nums) != 4:
 
 N, M, P, Q = input_nums
-points = []
+points: List[Point] = []
 for i in range(N):
     x, y = map(int, input().split())
     points.append(Point(x, y))
 
-sides: [Side] = []
+sides: List[Side] = []
 for i in range(M):
     fr, to = map(int, input().split())
     sides.append(Side(points[fr - 1], points[to - 1]))
