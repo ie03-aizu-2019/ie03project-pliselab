@@ -42,13 +42,14 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
     # 交差地点がない場合Noneを返す
     return None
 
+
 def list_cross_point(sides: List[Side]) -> List[Point]:
-    """交差地点を列挙
+    """交差地点を列挙。
 
     Args:
-        sides (List[Side]): 辺のリスト
+        sides (List[Side]): 辺の一覧。
     Returns:
-        List[Point]: 交差点(第1ソート:x, 第2ソート:y)
+        List[Point]: 交差点(第1ソート:x, 第2ソート:y)。
     """
     cross_points: [Point] = []
 
@@ -63,14 +64,14 @@ def list_cross_point(sides: List[Side]) -> List[Point]:
 
 
 def is_cross_at_edge(side1: Side, side2: Side) -> bool:
-    """2つの辺が端で交わっているか判断
+    """2つの辺が端で交わっているか判断。
 
     Args:
         side1 (Side): 1つ目の辺。
         side2 (Side): 2つ目の辺。
 
     Returns:
-        bool: 2つの辺が端で交わっているか
+        bool: 2つの辺が端で交わっているか。
     """
     return (side1.side_from == side2.side_from
         or side1.side_to == side2.side_to
