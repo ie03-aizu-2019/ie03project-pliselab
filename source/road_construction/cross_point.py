@@ -59,6 +59,7 @@ def list_cross_point(sides: List[Side]) -> List[Point]:
         cross_point = calc_cross_point(com[0], com[1])
         if cross_point is not None:
             cross_points.append(cross_point)
+            com[0].add_point(cross_point)
 
     return sorted(list(set(cross_points)), key = lambda point: (point.x, point.y))
 

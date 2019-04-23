@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from road_construction import Point, Side, calc_cross_point, list_cross_point, decide_shortest_path
+from road_construction import Point, Side, calc_cross_point, list_cross_point, decide_shortest_path, struct_graph
 
 # input
 input_nums = list(map(int, input().split()))
@@ -23,6 +23,7 @@ sides: List[Side] = [Side(points[f - 1], points[t - 1]) for f, t in [map(int, in
 
 # 交差地点の列挙
 cross_points = list_cross_point(sides)
+# 小課題1,2
 # for point in cross_points:
 #     print(f'{point.x} {point.y}')
 
@@ -30,6 +31,7 @@ for i in range(P):
     input()
 
 # 経路の列挙
-for i in range(M):
+g = struct_graph(sides, points, cross_points)
+
+for i in range(Q):
     f_id, t_id, n = input().split()
-    decide_shortest_path(f_id, t_id, sides, points, cross_points)

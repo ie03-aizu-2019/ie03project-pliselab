@@ -17,8 +17,7 @@ class Point:
     def __str__(self):
         return f'{self.x} {self.y}'
 
-    @staticmethod
-    def calc_distance(self, other):
+    def calc_distance(self, other) -> float:
         """対象の座標までの距離を求めます
 
         Args:
@@ -27,4 +26,4 @@ class Point:
         Returns:
             float: 距離
         """
-        return math.sqrt(math.pow(self.x - other.x, 2), math.pow(self.y - other.y, 2))
+        return math.sqrt(math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2))
