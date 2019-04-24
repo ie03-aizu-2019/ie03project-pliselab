@@ -44,7 +44,7 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
 
 
 def list_cross_point(sides: List[Side]) -> List[Point]:
-    """交差地点を列挙。
+    """交差地点を列挙。辺に交差地点の情報を追加する。
 
     Args:
         sides (List[Side]): 辺の一覧。
