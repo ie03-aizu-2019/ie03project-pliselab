@@ -33,10 +33,15 @@ points: List[Point] = [Point(*(map(int, input().split()))) for i in range(N)]
 sides: List[Side] = [Side(points[f - 1], points[t - 1])
                      for f, t in [map(int, input().split()) for i in range(M)]]
 
+## 小課題1
+if mode == '1':
+    cross_point = rc.calc_cross_point(sides[0], sides[1])
+    print(f'{cross_point.x} {cross_point.y}' if cross_point is not None else "NA")
+
+## 小課題2
 # 交差地点の列挙
 cross_points = rc.list_cross_point(sides)
-# 小課題1,2
-if mode == '1' or mode == '2':
+if mode == '2':
     for point in cross_points:
         print(f'{point.x} {point.y}')
 
