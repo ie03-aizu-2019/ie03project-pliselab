@@ -33,12 +33,12 @@ points: List[Point] = [Point(*(map(int, input().split()))) for i in range(N)]
 sides: List[Side] = [Side(points[f - 1], points[t - 1])
                      for f, t in [map(int, input().split()) for i in range(M)]]
 
-## 小課題1
+# 小課題1
 if mode == '1':
     cross_point = rc.calc_cross_point(sides[0], sides[1])
     print(f'{cross_point.x} {cross_point.y}' if cross_point is not None else "NA")
 
-## 小課題2
+# 小課題2
 # 交差地点の列挙
 cross_points = rc.list_cross_point(sides)
 if mode == '2':
@@ -49,12 +49,12 @@ for i in range(P):
     input()
 
 # 経路の列挙
-V = rc.struct_graph(sides, points, cross_points)
+V = rc.build_graph(sides, points, cross_points)
 # 小課題3,4
 if mode == '3' or mode == '4':
     for i in range(Q):
         f_id, t_id, n = input().split()
-        dist, path = rc.decide_shortest_path(f_id, t_id, V)
-        print('{:.5f}'.format(dist) if dist is not None else "NA")
-        if mode == '4' and path is not None:
-            print(' '.join(path))
+        for dist, path in rc.decide_k_shortest_path(f_id, t_id, V):
+            print(f'{dist:.6g}' if dist is not None else "NA")
+            if mode == '4' and path is not None:
+                print(' '.join(path))
