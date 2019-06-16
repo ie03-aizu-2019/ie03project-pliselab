@@ -5,6 +5,7 @@ import itertools as it
 
 from . import Side, Point
 
+
 def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
     """辺を2つ受け取り交差地点を計算する。
     交差地点がない場合Noneを返す。
@@ -24,13 +25,15 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
     mat_A = np.matrix([
         [Q1.x - P1.x, -(Q2.x - P2.x)],
         [Q1.y - P1.y, -(Q2.y - P2.y)]
-        ])
+    ])
     # 行列式
     A = np.linalg.det(mat_A)
+    if (A == 0):
+        return None
 
     mat = np.matrix([[P2.y - Q2.y, Q2.x - P2.x], [P1.y - Q1.y, Q1.x - P1.x]])
     _mat = np.matrix([[P2.x - P1.x], [P2.y - P1.y]])
-    result = ((mat * _mat) / A).A1 # 問題中のs,tの計算, matrix -> arrayに変換
+    result = ((mat * _mat) / A).A1  # 問題中のs,tの計算, matrix -> arrayに変換
 
     # s, t が共に0 <= s,t <= 1.0の場合は交差地点があると判断し作成
     if all(tmp > 0 and tmp < 1 for tmp in result):
@@ -61,7 +64,7 @@ def list_cross_point(sides: List[Side]) -> List[Point]:
             cross_points.append(cross_point)
             com[0].add_point(cross_point)
 
-    return sorted(list(set(cross_points)), key = lambda point: (point.x, point.y))
+    return sorted(list(set(cross_points)), key=lambda point: (point.x, point.y))
 
 
 def is_cross_at_edge(side1: Side, side2: Side) -> bool:
@@ -75,6 +78,6 @@ def is_cross_at_edge(side1: Side, side2: Side) -> bool:
         bool: 2つの辺が端で交わっているか。
     """
     return (side1.side_from == side2.side_from
-        or side1.side_to == side2.side_to
-        or side1.side_from == side2.side_to
-        or side1.side_to == side2.side_from)
+            or side1.side_to == side2.side_to
+            or side1.side_from == side2.side_to
+            or side1.side_to == side2.side_from)
