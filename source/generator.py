@@ -50,12 +50,12 @@ def main():
     # 辺の列挙
     side_from_to_set: Set[Tuple[int, int]] = set()
     while len(side_from_to_set) < M:
-        fr = random.randint(0, N - 1)
-        to = random.randint(0, N - 1)
+        fr = random.randint(1, N)
+        to = random.randint(1, N)
         if fr != to and not (fr, to) in side_from_to_set:
             side_from_to_set.add((fr, to))
 
-    sides: List[Side] = [Side(points[fr], points[to])
+    sides: List[Side] = [Side(points[fr - 1], points[to - 1])
                          for fr, to in side_from_to_set]
 
     # 交差地点の列挙
