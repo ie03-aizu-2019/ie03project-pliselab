@@ -9,34 +9,37 @@ from . import Side, Point, list_cross_point
 from tabulate import tabulate
 
 
-def printV(V):
+def _print_v(V):
+    """グラフを表で出力"""
     table = [[k] + list(V[k].values()) for k in V.keys()]
     headers = V.keys()
     print(tabulate(table, headers, tablefmt="grid"))
 
 
-def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]]) -> List[Tuple[float, List[str]]]:
+def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: int) -> List[Tuple[float, List[str]]]:
     """K最短経路を求めます。
 
     Args:
         s (str): 開始地点ID。
         g (str): 目的地点ID。
         V (Dict[str, Dict[str, float]]): 重み付きグラフ
+        k (int) 第何経路まで求めるか
 
     Returns:
         List[Tuple[float, List[str]]]: 第K経路までの距離と経路。
     """
 
+    # 最短経路 (第1最短経路)
     result = [decide_shortest_path(s, g, V)]
-    printV(V)
 
     if result[0][0] is None:
         return result
 
-    candidate = []
-    n = 0
-    while True:
-        # (K-1)最短経路
+    # 候補一覧
+    candidate: List[Tuple[float, List[str]]] = []
+
+    for n in range(k - 1):
+        # K最短経路
         _, path = result[n]
         for path_idx in range(len(path) - 1):
             # 新規の重み付きグラフを作成
@@ -47,22 +50,18 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]]) -> Li
                     v[p[i]][p[i + 1]] = math.inf
 
             d, p = decide_shortest_path(s, g, v)
-            # printV(v)
-            print("resut", result)
-            print("super", path, path[path_idx], path[path_idx + 1])
-            print(d, p)
-            print()
+
+            # 第K経路までに含まれていない、かつ、候補に存在しない場合、候補に追加
             if not p in [r[1] for r in result] and not p in [c[1] for c in candidate]:
                 candidate.append((d, p))
 
         candidate = sorted(candidate, key=lambda t: t[0], reverse=True)
-        print(candidate)
-        if len(candidate) == 0:
-            break
+
         next = candidate.pop()
+        if next[0] == math.inf:
+            break
         result.append(next)
         n += 1
-        print(end="\n\n")
 
     return result
 
