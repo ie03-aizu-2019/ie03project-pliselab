@@ -8,18 +8,29 @@ import matplotlib.pyplot as plt
 from road_construction import Point, Side
 import road_construction as rc
 
-X_Y_MAX = 8
-K_MAX = 4
+X_Y_MAX = 200
+K_MAX = 5
 
 
 def main():
+    global X_Y_MAX
+    global K_MAX
     parser = argparse.ArgumentParser()
     parser.add_argument('-n')
     parser.add_argument('-m')
     parser.add_argument('-p')
     parser.add_argument('-q')
     parser.add_argument('-o', '--output')
+    parser.add_argument('--xymax')
+    parser.add_argument('--kmax')
+
     args = parser.parse_args()
+
+    if (args.xymax):
+        X_Y_MAX = int(args.xymax)
+    if (args.kmax):
+        K_MAX = int(args.kmax)
+
     N = decide_input_num(args.n or '', 2, 200)
     M = decide_input_num(args.m or '', 1, N - 1)
     if (N <= M):
