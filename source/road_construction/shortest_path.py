@@ -38,12 +38,14 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
     candidate: List[Tuple[float, List[str]]] = []
 
     for n in range(k - 1):
-        # 第{n + 2}最短経路
-        _, path = result[n]
+        # 第{n + 2}最短経路探索
 
+        _, path = result[n]
         # 候補を求める
         for super_node_idx, super_node in enumerate(path[:-1]):
-            super_root = path[:super_node_idx]
+            super_root: List[str] = path[:super_node_idx]
+            super_root_dist: float = calc_path_distance(super_root, V)
+
             # 新規の重み付きグラフを作成
             v = copy.deepcopy(V)
             # 第{n + 1}経路以内の経路で使用した、super nodeからの道を削除する
@@ -54,11 +56,8 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
 
             # 新規のグラフでのsuper root以降の最短経路を求める
             # 上で道を削除したことで、少し遠回りの道が最短経路になる
-            _, p = decide_shortest_path(super_node, g, v)
-
-            p = super_root + p
-            # 元々のグラフを使用して距離を求める
-            d = calc_path_distance(p, V)
+            d, p = decide_shortest_path(super_node, g, v)
+            d, p = super_root_dist + d, super_root + p
 
             # 第K経路までに含まれていない、かつ、候補に存在しない場合、候補に追加
             # 同じ点を2回通るような経路は候補に入れない
@@ -122,7 +121,6 @@ def decide_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]]) -> Tupl
         dist_u, u = heappop(que)
         if dist[u] < dist_u:
             continue
-        # 必要なら -> for p, d in sorted(V[u].items(), lambda k, v: k):
         for p, d in V[u].items():
             if dist[p] > dist_u + d:
                 dist[p] = dist_u + d
