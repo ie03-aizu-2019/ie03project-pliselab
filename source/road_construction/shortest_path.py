@@ -30,65 +30,62 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
     """
 
     # 最短経路 (第1最短経路)
-    result = [decide_shortest_path(s, g, V)]
-    if result[0][0] is None:
+    result: List[Tuple[float, List[str]]] = [decide_shortest_path(s, g, V)]
+    if result[0][0] is None or result[0][0] == math.inf:
         return result
 
     # 候補一覧
     candidate: List[Tuple[float, List[str]]] = []
 
     for n in range(k - 1):
-        # print(f"{n + 2}最短経路")
-        # print("resut", result)
-        # 第K最短経路
+        # 第{n + 2}最短経路
         _, path = result[n]
 
         # 候補を求める
-        for sn_idx, spur_node in enumerate(path[:-1]):
-            # print(f"super node: {spur_node}")
-            # print(f"super root: {path[:sn_idx]}")
-            super_root = path[:sn_idx]
+        for super_node_idx, super_node in enumerate(path[:-1]):
+            super_root = path[:super_node_idx]
             # 新規の重み付きグラフを作成
             v = copy.deepcopy(V)
+            # 第{n + 1}経路以内の経路で使用した、super nodeからの道を削除する
             for _, p in result:
-                if spur_node in p:
-                    i = p.index(spur_node)
+                if super_node in p:
+                    i = p.index(super_node)
                     v[p[i]][p[i + 1]] = math.inf
-                    v[p[i + 1]][p[i]] = math.inf
-                    # print("delete: ", p[i], p[i + 1])
-            _, p = decide_shortest_path(spur_node, g, v)
+
+            # 新規のグラフでのsuper root以降の最短経路を求める
+            # 上で道を削除したことで、少し遠回りの道が最短経路になる
+            _, p = decide_shortest_path(super_node, g, v)
+
             p = super_root + p
+            # 元々のグラフを使用して距離を求める
             d = calc_path_distance(p, V)
-            # _print_v(v)
-            # print(f'd: {d}, p: {p}')
 
             # 第K経路までに含まれていない、かつ、候補に存在しない場合、候補に追加
+            # 同じ点を2回通るような経路は候補に入れない
             if not p in [r[1] for r in result] and not p in [c[1] for c in candidate] and len(p) == len(set(p)):
-                candidate.append((d, p))
-                # print("append ->", candidate)
-            # print()
+                heappush(candidate, (d, p))
 
-        # print("候補探索完了")
-        candidate = sorted(candidate, key=lambda t: t[0], reverse=True)
-        # print(candidate)
-
-        next = candidate.pop()
-        if next[0] == math.inf:
+        # 候補から距離が最小のものを取り出す
+        if candidate:
+            next = heappop(candidate)
+            if next[0] == math.inf:
+                break
+            result.append(next)
+        else:
             break
-        result.append(next)
 
-        # print("\n")
-
-    # print("\n\n")
     return result
 
 
-def calc_path_distance(path: List[str], V: Dict[str, Dict[str, float]]):
-    """経路の距離を求めます
+def calc_path_distance(path: List[str], V: Dict[str, Dict[str, float]]) -> float:
+    """
+    経路の距離を求めます
 
     Args:
         path (List[str]): 経路
         V (Dict[str, Dict[str, float]]): 重み付きグラフ
+    Returns:
+        float: 距離
     """
     if len(path) <= 1:
         return math.inf
@@ -96,7 +93,7 @@ def calc_path_distance(path: List[str], V: Dict[str, Dict[str, float]]):
 
 
 def decide_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]]) -> Tuple[float, List[str]]:
-    """最短経路を求めます。
+    """最短経路を求めます。(ダイクストラ法)
 
     Args:
         s (str): 開始地点ID。
@@ -110,7 +107,7 @@ def decide_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]]) -> Tupl
     ids = list(V.keys())
     # from, toのどちらかが不正なら、経路を探索せずに終了
     if (s not in ids or g not in ids):
-        return (None, None)
+        return (math.inf, [])
 
     dist = {id: math.inf for id in ids}
     prev = {id: None for id in ids}
