@@ -1,20 +1,28 @@
-from road_construction import Point, Side
-from . import Side, Point, list_cross_point
+from typing import List
+from pprint import pprint
+from . import Side, Point, list_cross_point, struct_graph
 
 def main_road():
     
     return
 
 def connected_road(points: [Point], sides: [Side]):
-    """与えられたグラフの連結成分を検出します。
-
-    Args:
-        s (str): 開始地点ID。
-        g (str): 目的地点ID。
-        V (Dict[str, Dict[str, float]]): 重み付きグラフ
-        n (int, optional): いくつの経路を求めるか。 Defaults to 1.
-
-    Returns:
-        Tuple[float, List[str]]: 最短経路の距離と経路。
-    """
+    
     return
+
+def dfs(sides: List[Side], points: List[Point], cross_points: List[Point]) -> [(Point, int, int)]:
+    """
+
+    """
+    # Dict[fromID, toID]
+    stack: [Dict[str, str]] = []
+    graph: Dict[str, Dict[str, float]] = struct_graph(sides, points, cross_points)
+    _graph: Dict[str, str] = []
+    for dic in graph:
+        for key in dic.keys():
+            _graph[dic.key] = key
+
+    # Tuple[Point, pre_order, min] 頂点と行きがけ順のDict作成, 行きがけ順を0で初期化
+    points_pre_order: [(Point, int, int)] = [(point, 0, 0) for point in points]
+    
+    pprint(_graph)
