@@ -59,3 +59,6 @@ if mode == '3' or mode == '4':
             print(f'{dist:.6g}' if dist != math.inf else "NA")
             if mode == '4' and dist != math.inf:
                 print(' '.join(path))
+
+
+rc.find_bridge(sides, points, cross_points)
