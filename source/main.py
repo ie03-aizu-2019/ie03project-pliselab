@@ -3,6 +3,7 @@
 from typing import List, Optional
 
 import argparse
+import math
 
 from road_construction import Point, Side
 import road_construction as rc
@@ -49,12 +50,12 @@ for i in range(P):
     input()
 
 # 経路の列挙
-V = rc.struct_graph(sides, points, cross_points)
+V = rc.build_graph(sides, points, cross_points)
 # 小課題3,4
 if mode == '3' or mode == '4':
     for i in range(Q):
-        f_id, t_id, n = input().split()
-        dist, path = rc.decide_shortest_path(f_id, t_id, V)
-        print('{:.5f}'.format(dist) if dist is not None else "NA")
-        if mode == '4' and path is not None:
-            print(' '.join(path))
+        f_id, t_id, k = input().split()
+        for dist, path in rc.decide_k_shortest_path(f_id, t_id, V, int(k)):
+            print(f'{dist:.6g}' if dist != math.inf else "NA")
+            if mode == '4' and dist != math.inf:
+                print(' '.join(path))
