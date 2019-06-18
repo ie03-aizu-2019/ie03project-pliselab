@@ -44,7 +44,8 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
         # 候補を求める
         for super_node_idx, super_node in enumerate(path[:-1]):
             super_root: List[str] = path[:super_node_idx]
-            super_root_dist: float = calc_path_distance(super_root, V)
+            super_root_dist: float = calc_path_distance(
+                path[:super_node_idx + 1], V)
 
             # 新規の重み付きグラフを作成
             v = copy.deepcopy(V)
