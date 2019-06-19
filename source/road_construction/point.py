@@ -1,4 +1,5 @@
 import math
+# from . import Side
 
 class Point:
     x: float
@@ -27,3 +28,6 @@ class Point:
             float: 距離
         """
         return math.sqrt(math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2))
+    
+    # def calc_distance_side(self, side: Side):
+
