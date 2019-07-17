@@ -6,7 +6,7 @@ import math
 def calc_distance(side: Side, point: Point) -> float:
     """
     与えられた点と線分との距離を計算します。
-    https://mathtrain.jp/tentotyokusen　
+    https://mathtrain.jp/tentotyokusen
     これのdの式のままにやる たぶんうまくいってない
 
     Args:
@@ -53,7 +53,7 @@ def calc_distance_vec(side: Side, point: Point) -> float:
     distance = inner / (vecA[0] * vecA[0] + vecA[1] * vecA[1])
     return distance
 
-def suggest_optional_road(sides: List[Side], point: Point):
+def suggest_optional_road(sides: List[Side], point: Point) -> Point:
     """
     与えられた座標から道の提案をします。
 
@@ -65,22 +65,27 @@ def suggest_optional_road(sides: List[Side], point: Point):
         最適な道 に繋いだ時の交差地点の座標
     """
 
+    cross_point: Point
+
     # 線分と座標との距離が一番近いものを取得
     min_distance_side = None
     min_distance = None
     for side in sides:
-        d = calc_distance(side, point)
+        d = calc_distance_vec(side, point)
         print(d)
         if min_distance is None or min_distance > d:
             min_distance = d
             min_distance_side = side
-    print(min_distance_side)
+    print("最短距離の線分", min_distance_side)
     if min_distance <= 0.0:
-        return min_distance_side.side_from
+        cross_point = min_distance_side.side_to
     elif min_distance >= 1:
-        return min_distance_side.side_to
+        cross_point = min_distance_side.side_from
     else:
         x = min_distance_side.side_from.x + min_distance * (min_distance_side.side_to.x - min_distance_side.side_from.x)
         y = min_distance_side.side_from.y + min_distance * (min_distance_side.side_to.y - min_distance_side.side_from.y)
-        return Point(x, y)
+        cross_point = Point(x, y)
 
+    sides += [Side(cross_point, point)]
+    return cross_point
+    
