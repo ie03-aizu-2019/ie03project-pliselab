@@ -1,5 +1,4 @@
 import math
-from . import Side
 
 class Point:
     x: float

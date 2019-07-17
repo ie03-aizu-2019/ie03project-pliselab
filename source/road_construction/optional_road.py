@@ -16,8 +16,8 @@ def calc_distance(side: Side, point: Point) -> (float, Point):
     """
 
     # ベクトル
-    vecA = (side.side_to.x - side.side_from.x, side.side_to.y - side.side_from.y)
-    tmp = float(-(vecA[0] * (side.side_from.x - point.x) + vecA[1] * (side.side_from.y - point.y))) / ((vecA[0] ** 2) + (vecA[1] ** 2))
+    vec = (side.side_to.x - side.side_from.x, side.side_to.y - side.side_from.y)
+    tmp = float(-(vec[0] * (side.side_from.x - point.x) + vec[1] * (side.side_from.y - point.y))) / ((vec[0] ** 2) + (vec[1] ** 2))
     cross_point = None
     distance = 0.0
 
@@ -28,7 +28,7 @@ def calc_distance(side: Side, point: Point) -> (float, Point):
         cross_point = side.side_to
         distance = math.sqrt((cross_point.x - point.x) ** 2 + ((cross_point.y - point.y) ** 2))
     else:
-        cross_point = Point(vecA[0] * tmp + side.side_from.x, vecA[1] * tmp + side.side_from.y)
+        cross_point = Point(vec[0] * tmp + side.side_from.x, vec[1] * tmp + side.side_from.y)
         distance = math.sqrt((cross_point.x - point.x) ** 2 + ((cross_point.y - point.y) ** 2))
     return (float(distance), cross_point)
 
