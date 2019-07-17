@@ -46,9 +46,6 @@ if mode == '2':
     for point in cross_points:
         print(f'{point.x} {point.y}')
 
-# for i in range(P):
-#     input()
-
 # 経路の列挙
 V = rc.build_graph(sides, points, cross_points)
 # 小課題3,4
@@ -62,11 +59,11 @@ if mode == '3' or mode == '4':
 
 # 小課題7
 # 入力
-points = []
-for i in range(P):
-    points.append(Point(*map(int, input().split())))
+if mode == '7':
+    points = []
+    for i in range(P):
+        points.append(Point(*map(int, input().split())))
 
-for point in points:
-    print(rc.suggest_optional_road(sides, point))
-    
+    for point in points:
+        print(rc.suggest_optional_road(sides, point))
 

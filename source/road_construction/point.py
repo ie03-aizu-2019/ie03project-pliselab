@@ -16,7 +16,7 @@ class Point:
         return hash(self.x + self.y)
 
     def __str__(self):
-        return f'{self.x} {self.y}'
+        return f'{round(self.x, 5)} {round(self.y, 5)}'
 
     def calc_distance(self, other) -> float:
         """対象の座標までの距離を求めます
