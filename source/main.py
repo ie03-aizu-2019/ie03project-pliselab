@@ -57,13 +57,13 @@ if mode == '3' or mode == '4':
             if mode == '4' and dist != math.inf:
                 print(' '.join(path))
 
-# 小課題7
 # 入力
-if mode == '7':
-    points = []
-    for i in range(P):
-        points.append(Point(*map(int, input().split())))
+points = []
+for i in range(P):
+    points.append(Point(*map(int, input().split())))
 
+# 小課題7    
+if mode == '7':
     for point in points:
         print(rc.suggest_optional_road(sides, point))
 
