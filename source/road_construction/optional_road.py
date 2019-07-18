@@ -54,7 +54,7 @@ def suggest_optional_road(sides: List[Side], point: Point) -> Point:
             min_distance = dist
             min_distance_side = side
             min_side_cross_point = p
-    sides += [Side(min_side_cross_point, point)]
+    sides.append(Side(min_side_cross_point, point))
     
     return min_side_cross_point
     
