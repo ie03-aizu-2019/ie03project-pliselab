@@ -33,7 +33,7 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
 
     mat = np.matrix([[P2.y - Q2.y, Q2.x - P2.x], [P1.y - Q1.y, Q1.x - P1.x]])
     _mat = np.matrix([[P2.x - P1.x], [P2.y - P1.y]])
-    result = ((mat * _mat) / A).A1  # 問題中のs,tの計算, matrix -> arrayに変換
+    result = ((mat * _mat) / abs(A)).A1  # 問題中のs,tの計算, matrix -> arrayに変換
 
     # s, t が共に0 <= s,t <= 1.0の場合は交差地点があると判断し作成
     if all(tmp > 0 and tmp < 1 for tmp in result):
