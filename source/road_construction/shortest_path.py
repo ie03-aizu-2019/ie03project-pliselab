@@ -39,26 +39,31 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
 
     for n in range(k - 1):
         # 第{n + 2}最短経路探索
+        _, path = result[-1]
 
-        _, path = result[n]
         # 候補を求める
         for super_node_idx, super_node in enumerate(path[:-1]):
-            super_root: List[str] = path[:super_node_idx]
-            super_root_dist: float = calc_path_distance(
-                path[:super_node_idx + 1], V)
+            super_root: List[str] = path[:super_node_idx + 1]
+            super_root_dist: float = calc_path_distance(super_root, V)
 
             # 新規の重み付きグラフを作成
             v = copy.deepcopy(V)
             # 第{n + 1}経路以内の経路で使用した、super nodeからの道を削除する
+            for i in range(len(super_root) - 1):
+                v[super_root[i + 1]][super_root[i]] = math.inf
+                v[super_root[i]][super_root[i + 1]] = math.inf
+
             for _, p in result:
                 if super_node in p:
                     i = p.index(super_node)
-                    v[p[i]][p[i + 1]] = math.inf
+                    if super_root[:-1] == p[:i]:
+                        v[p[i]][p[i + 1]] = math.inf
+                        v[p[i + 1]][p[i]] = math.inf
 
             # 新規のグラフでのsuper root以降の最短経路を求める
             # 上で道を削除したことで、少し遠回りの道が最短経路になる
             d, p = decide_shortest_path(super_node, g, v)
-            d, p = super_root_dist + d, super_root + p
+            d, p = super_root_dist + d, super_root[:-1] + p
 
             # 第K経路までに含まれていない、かつ、候補に存在しない場合、候補に追加
             # 同じ点を2回通るような経路は候補に入れない
@@ -66,13 +71,12 @@ def decide_k_shortest_path(s: str, g: str, V: Dict[str, Dict[str, float]], k: in
                 heappush(candidate, (d, p))
 
         # 候補から距離が最小のものを取り出す
-        if candidate:
-            next = heappop(candidate)
-            if next[0] == math.inf:
-                break
-            result.append(next)
-        else:
+        if not candidate:
             break
+        min_cand = heappop(candidate)
+        if min_cand[0] == math.inf:
+            break
+        result.append(min_cand)
 
     return result
 
@@ -88,7 +92,7 @@ def calc_path_distance(path: List[str], V: Dict[str, Dict[str, float]]) -> float
         float: 距離
     """
     if len(path) <= 1:
-        return math.inf
+        return 0
     return sum([V[path[i]][path[i + 1]] for i in range(len(path) - 1)])
 
 
@@ -163,7 +167,7 @@ def build_graph(sides, points: List[Point], cross_points: List[Point]) -> Dict[s
     # 距離情報を追加
     for s in sides:
         sp = s.points
-        for i in range(len(s.points) - 1):
+        for i in range(len(sp) - 1):
             d = sp[i].calc_distance(sp[i + 1])
             pid1 = all_point_dic_inv[sp[i]]
             pid2 = all_point_dic_inv[sp[i + 1]]

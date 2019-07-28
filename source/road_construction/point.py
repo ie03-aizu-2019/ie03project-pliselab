@@ -1,5 +1,6 @@
 import math
 
+
 class Point:
     x: float
     y: float
@@ -15,7 +16,7 @@ class Point:
         return hash(self.x + self.y)
 
     def __str__(self):
-        return f'{round(self.x, 5)} {round(self.y, 5)}'
+        return f'{self.x:.6g} {self.y:.6g}'
 
     def calc_distance(self, other) -> float:
         """対象の座標までの距離を求めます
@@ -27,4 +28,3 @@ class Point:
             float: 距離
         """
         return math.sqrt(math.pow(self.x - other.x, 2) + math.pow(self.y - other.y, 2))
-    
