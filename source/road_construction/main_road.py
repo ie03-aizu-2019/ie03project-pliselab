@@ -28,14 +28,17 @@ def find_bridge(sides: List[Side], points: List[Point], cross_points: List[Point
     _graph: List[(str, str)] = []
     for k, v in graph.items():
         for key, val in v.items():
-            _graph.append((k, key))
+            if val != float('inf'):
+                _graph.append((k, key))
 
     # Dict[point ID, pre_order, min] 頂点と行きがけ順のDict作成, 行きがけ順を0で初期化
     points_pre_order = {key: {"pre" : None, "min" : None} for key, val in graph.items()}
-    print(points_pre_order)
-    print(depth_first_search(points_pre_order, list(points_pre_order.keys())[0], 0, _graph))
+    depth_first_search(points_pre_order, list(points_pre_order.keys())[0], 0, _graph)
+    # print(points_pre_order)
+    # print(depth_first_search(points_pre_order, list(points_pre_order.keys())[0], 0, _graph))
 
 def depth_first_search(points: {str: {"pre":int, "min":int}}, id: str, pre: int, _graph) -> {str: {"pre":int, "min":int}}:
+    print(points)
     # 全てのpreが埋まっていたら処理終了
     if all(map(lambda v: v["pre"], points.values())):
         print("end")
@@ -47,5 +50,4 @@ def depth_first_search(points: {str: {"pre":int, "min":int}}, id: str, pre: int,
 
     for side in connected_points:
         if points[side]["pre"] is None:
-            print("if")
             return depth_first_search(points, side, pre + 1, _graph)
