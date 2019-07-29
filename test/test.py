@@ -38,6 +38,12 @@ class Test(unittest.TestCase):
             expect = f.read()
         self.assertEqual(result, expect)
 
+    def test_mode_7(self):
+        result = self.get_output("data/input/2_7.txt", "7")
+        with open("data/output_t_7/7.txt") as f:
+            expect = f.read()
+        self.assertEqual(result, expect)
+
     def get_output(self, filepath, mode):
         """main.pyを実行し出力を返す
 

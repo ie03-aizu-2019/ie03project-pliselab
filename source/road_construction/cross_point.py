@@ -29,17 +29,16 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
     # 行列式
     A = np.linalg.det(mat_A)
     if (A == 0):
-        return None
+        return False, None
 
     mat = np.matrix([[P2.y - Q2.y, Q2.x - P2.x], [P1.y - Q1.y, Q1.x - P1.x]])
     _mat = np.matrix([[P2.x - P1.x], [P2.y - P1.y]])
-    result = ((mat * _mat) / A).A1  # 問題中のs,tの計算, matrix -> arrayに変換
+    s, t = ((mat * _mat) / A).A1  # 問題中のs,tの計算, matrix -> arrayに変換
 
     # s, t が共に0 <= s,t <= 1.0の場合は交差地点があると判断し作成
-    if all(tmp > 0 and tmp < 1 for tmp in result):
-        s = result[0]
-        x = round(P1.x + (Q1.x - P1.x) * s, 5)
-        y = round(P1.y + (Q1.y - P1.y) * s, 5)
+    if all(0 <= tmp and tmp <= 1 for tmp in [s, t]):
+        x = P1.x + (Q1.x - P1.x) * s
+        y = P1.y + (Q1.y - P1.y) * s
         return Point(x, y)
 
     # 交差地点がない場合Noneを返す
@@ -56,13 +55,15 @@ def list_cross_point(sides: List[Side]) -> List[Point]:
     """
     cross_points: [Point] = []
 
-    for com in it.product(sides, sides):
-        if is_cross_at_edge(com[0], com[1]):
+    for side1, side2 in it.combinations(sides, 2):
+        if is_cross_at_edge(side1, side2):
             continue
-        cross_point = calc_cross_point(com[0], com[1])
-        if cross_point is not None:
-            cross_points.append(cross_point)
-            com[0].add_point(cross_point)
+        middle_point = calc_cross_point(side1, side2)
+        if middle_point is not None:
+            if middle_point not in [side1.side_from, side1.side_to, side2.side_from, side2.side_to]:
+                cross_points.append(middle_point)
+            side1.add_point(middle_point)
+            side2.add_point(middle_point)
 
     return sorted(list(set(cross_points)), key=lambda point: (point.x, point.y))
 
