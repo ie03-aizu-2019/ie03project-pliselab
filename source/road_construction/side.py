@@ -2,6 +2,7 @@ from typing import List
 
 from . import Point
 
+
 class Side:
     side_from: Point
     side_to: Point
@@ -21,6 +22,6 @@ class Side:
     def add_point(self, point):
         dist = self.side_from.calc_distance(point)
         for i, p in enumerate(self.points):
-            if dist < self.side_from.calc_distance(p):
+            if dist < self.side_from.calc_distance(p) and point not in self.points:
                 self.points.insert(i, point)
                 break
