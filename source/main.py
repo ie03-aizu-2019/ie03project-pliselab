@@ -69,4 +69,4 @@ if mode == '7':
         print(rc.suggest_optional_road(sides, point))
 
 # 橋の検出テスト
-rc.find_bridge(sides, points, cross_points)
+print(rc.find_bridge(sides, points, cross_points))
