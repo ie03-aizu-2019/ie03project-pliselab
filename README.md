@@ -1,5 +1,23 @@
 # ソフトウェア総合演習
 
+## 対話モードでの実行方法
+
+`$ python3 main.py` or `$ python3 main.py -m interactive` or `$ python3 main.py -m 9`
+
+### コマンド一覧
+
+| 操作               | クエリ                         | 例                |
+| :----------------- | :----------------------------- | :---------------- |
+| 点の追加           | add X Y                        | add 10 20         |
+| 線の追加           | connect P1 P2<br>con P1 P2     | connect 3 4       |
+| 点の追加・自動接続 | add-connect X Y<br>add-con X Y | add-connect 12 32 |
+| 交差点一覧         | list crosspoint<br>list cross  | -                 |
+| 幹線道路一覧       | list bridge                    | -                 |
+| 経路探索           | search P1 P2 [K=1]             | search 3 C2 4     |
+| グラフ表示開始     | plot                           | -                 |
+| グラフ表示終了     | plot close                     | -                 |
+| 終了               | exit, quit, q                  | -                 |
+
 ## ジェネレーターの使用方法
 
 `$ python3 generator.py`
