@@ -51,7 +51,7 @@ def depth_first_search(points: {str: {"pre":int, "min":int, "prev": str}}, id: s
 
     # 開始地点をスタックに積む
     initPlace = list(points.items())[0]
-    stack = [initPlace[0]]
+    stack = [initPlace]
     points[stack[0][0]]["pre"] = 0
     points[stack[0][0]]["min"] = 0
 
@@ -76,8 +76,8 @@ def depth_first_search(points: {str: {"pre":int, "min":int, "prev": str}}, id: s
                 tmp.sort(key=lambda x : points[x]["min"])
                 points[current[0]]["min"] = points[tmp[0]]["min"]
             stack.pop()
-    bridge_tos = list(filter(lambda x : x["pre"] == x["min"] and (x["pre"] != initPlace["pre"]), points))
-    for bridge_to in bridge_tos:
-        bridges.append({"bridge_from": points[bridge_to]["prev"], "bridge_to": bridge_to})
+    bridge_tos = list(filter(lambda x : x[1]["pre"] == x[1]["min"] and (x[1]["pre"] != initPlace[1]["pre"]), points.items()))
 
+    for bridge_to in bridge_tos:
+        bridges.append({"bridge_from": bridge_to[1]["prev"], "bridge_to": bridge_to[0]})
     return bridges
