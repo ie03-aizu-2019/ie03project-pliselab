@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 import itertools as it
@@ -6,7 +6,7 @@ import itertools as it
 from . import Side, Point
 
 
-def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
+def calc_cross_point(side1: Side, side2: Side) -> Tuple[bool, Optional[Point]]:
     """辺を2つ受け取り交差地点を計算する。
     交差地点がない場合Noneを返す。
 
@@ -15,7 +15,7 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
         side2 (Side): 2つ目の辺。
 
     Returns:
-        Optional[Point]: 交差地点。
+        Tuple[bool, Optional[Point]]: 端点以外で交差しているか, 交差地点。
     """
     # 交差地点計算
     Q1: Point = side1.side_to
@@ -39,10 +39,10 @@ def calc_cross_point(side1: Side, side2: Side) -> Optional[Point]:
     if all(0 <= tmp and tmp <= 1 for tmp in [s, t]):
         x = P1.x + (Q1.x - P1.x) * s
         y = P1.y + (Q1.y - P1.y) * s
-        return Point(x, y)
+        return all(0 < tmp and tmp < 1 for tmp in [s, t]), Point(x, y)
 
     # 交差地点がない場合Noneを返す
-    return None
+    return False, None
 
 
 def list_cross_point(sides: List[Side]) -> List[Point]:
@@ -58,9 +58,9 @@ def list_cross_point(sides: List[Side]) -> List[Point]:
     for side1, side2 in it.combinations(sides, 2):
         if is_cross_at_edge(side1, side2):
             continue
-        middle_point = calc_cross_point(side1, side2)
+        is_cross, middle_point = calc_cross_point(side1, side2)
         if middle_point is not None:
-            if middle_point not in [side1.side_from, side1.side_to, side2.side_from, side2.side_to]:
+            if is_cross:
                 cross_points.append(middle_point)
             side1.add_point(middle_point)
             side2.add_point(middle_point)
