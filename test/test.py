@@ -18,6 +18,12 @@ class Test(unittest.TestCase):
     def test_mode_4(self):
         self.assert_all_set('4', 'data/mode_4')
 
+    def test_mode_5(self):
+        self.assert_all_set('5', 'data/mode_5')
+
+    def test_mode_6(self):
+        self.assert_all_set('6', 'data/mode_6')
+
     def test_mode_7(self):
         self.assert_all_set('7', 'data/mode_7')
 
