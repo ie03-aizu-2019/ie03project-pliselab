@@ -106,18 +106,24 @@ def interactive():
 
             # 辺の追加
             elif q in ['connect', 'con']:
-                fr, to = query[1], query[2]
+                fr, to = int(query[1]) - 1, int(query[2]) - 1
                 if fr == to:
                     print(f'Choose different points')
                     continue
-                fr_point = points[int(
-                    fr) - 1] if fr[0] != 'C' else cross_points[int(fr[1:]) - 1]
-                to_point = points[int(
-                    to) - 1] if to[0] != 'C' else cross_points[int(to[1:]) - 1]
 
-                sides.append(Side(fr_point, to_point))
+                sides.append(Side(points[fr], points[to]))
                 cross_points = rc.list_cross_point(sides)
-                print(f'connect {fr} and {to}')
+                print(f'connect {fr + 1} and {to + 1}')
+
+            # 点の追加・自動接続
+            elif q in ['add-connect', 'add-con']:
+                point1 = Point(int(query[1]), int(query[2]))
+                point2 = rc.suggest_optional_road(sides, point1)
+                for p in [point1, point2]:
+                    if p not in points:
+                        points.append(p)
+                print(point2)
+                cross_points = rc.list_cross_point(sides)
 
             # 一覧の表示
             elif q in ['list']:
@@ -134,6 +140,7 @@ def interactive():
             elif q in ['search']:
                 f_id, t_id = query[1], query[2]
                 k = int(query[3]) if len(query) > 3 else 1
+
                 V = rc.build_graph(sides, points, cross_points)
                 for dist, path in rc.decide_k_shortest_path(f_id, t_id, V, k):
                     print(f'{dist:.6g}' if dist != math.inf else "NA")
