@@ -26,6 +26,9 @@ class Test(unittest.TestCase):
 
     def test_mode_7(self):
         self.assert_all_set('7', 'data/mode_7')
+    
+    def test_mode_8(self):
+        self.assert_all_set('8', 'data/mode_8')
 
     def assert_all_set(self, mode, dir_path):
         for data_set_dir in os.listdir(dir_path):
