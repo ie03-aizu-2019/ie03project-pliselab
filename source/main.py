@@ -12,7 +12,11 @@ import road_construction as rc
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--mode')
 args = parser.parse_args()
-mode = args.mode or "4"
+mode = args.mode or '4'
+if mode == '5':
+    mode = '3'
+if mode == '6':
+    mode = '4'
 
 # input
 input_nums = list(map(int, input().split()))
@@ -37,7 +41,7 @@ sides: List[Side] = [Side(points[f - 1], points[t - 1])
 # 小課題1
 if mode == '1':
     is_cross, cross_point = rc.calc_cross_point(sides[0], sides[1])
-    print(str(cross_point) if is_cross else "NA")
+    print(cross_point if is_cross else "NA")
 
 # 小課題2
 # 交差地点の列挙
@@ -54,7 +58,7 @@ for i in range(P):
 
 # 経路の列挙
 V = rc.build_graph(sides, points, cross_points)
-# 小課題3,4
+# 小課題3,4,5,6
 for i in range(Q):
     f_id, t_id, k = input().split()
     if mode == '3' or mode == '4':
