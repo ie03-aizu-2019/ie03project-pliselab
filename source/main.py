@@ -17,7 +17,7 @@ parser.add_argument('-m', '--mode')
 args = parser.parse_args()
 mode = args.mode or 'interactive'
 
-mode_dict = {'5': '3', '6': '4', '10': 'interactive'}
+mode_dict = {'5': '3', '6': '4', '9': 'interactive'}
 if mode in mode_dict.keys():
     mode = mode_dict[mode]
 
@@ -84,6 +84,11 @@ def run():
         for point in additional_points:
             print(rc.suggest_optional_road(sides, point))
 
+    # 小課題8
+    if mode == '8':
+        for road in rc.find_bridge(sides, points, cross_points):
+            print(f'{road["bridge_from"]} {road["bridge_to"]}')
+
 
 def interactive():
     points, sides, cross_points = [], [], []
@@ -93,10 +98,13 @@ def interactive():
             query_str = input(">>> ")
             query = query_str.split(' ')
             q = query[0]
-            if q == 'add':
+
+            # 点の追加
+            if q in ['add']:
                 points.append(Point(int(query[1]), int(query[2])))
                 print(f'add {len(points)}')
 
+            # 辺の追加
             elif q in ['connect', 'con']:
                 fr, to = query[1], query[2]
                 if fr == to:
@@ -111,15 +119,19 @@ def interactive():
                 cross_points = rc.list_cross_point(sides)
                 print(f'connect {fr} and {to}')
 
-            elif q == 'list':
-                if query[1] == 'crosspoint':
+            # 一覧の表示
+            elif q in ['list']:
+                # 交差点
+                if query[1] in ['crosspoint', 'cross']:
                     for point in cross_points:
                         print(point)
-                elif query[1] == 'bridge':
-                    # TODO 橋(幹線道路)の列挙
-                    pass
+                # 橋(幹線道路)
+                elif query[1] in ['bridge']:
+                    for road in rc.find_bridge(sides, points, cross_points):
+                        print(f'{road["bridge_from"]} {road["bridge_to"]}')
 
-            elif q == 'search':
+            # 経路探索
+            elif q in ['search']:
                 f_id, t_id = query[1], query[2]
                 k = int(query[3]) if len(query) > 3 else 1
                 V = rc.build_graph(sides, points, cross_points)
@@ -128,18 +140,24 @@ def interactive():
                     if dist != math.inf:
                         print(' '.join(path))
 
-            elif q == 'plot':
-                if len(query) > 1 and query[1] == 'close':
+            # グラフの表示
+            elif q in ['plot']:
+                # 終了
+                if len(query) > 1 and query[1] in ['close']:
                     plt.close()
                     plot_flg = False
+                # 表示開始
                 else:
                     plot_flg = True
+
+            # 終了
             elif q in ['quit', 'q', 'exit']:
                 plt.close()
                 break
             else:
                 print(f'Illegal Query: {query_str}')
 
+            # グラフの更新
             if plot_flg:
                 plt.close()
                 gg.create_graph(points, cross_points, sides, [],
