@@ -35,11 +35,10 @@ def find_bridge(sides: List[Side], points: List[Point], cross_points: List[Point
                 _graph[k].append(key)
 
     # Dict[point ID, pre_order, min] 頂点と行きがけ順のDict作成, 行きがけ順, 最小値をinfで初期化
-    points_pre_order = {key: {"pre" : float('inf'), "min" : float('inf')} for key, val in graph.items()}
+    points_pre_order = {key: {"pre" : float('inf'), "min" : float('inf'), "prev": None} for key, val in graph.items()}
     depth_first_search(points_pre_order, list(points_pre_order.keys())[0], 1, _graph)
-    # print(depth_first_search(points_pre_order, list(points_pre_order.keys())[0], 0, _graph))
 
-def depth_first_search(points: {str: {"pre":int, "min":int}}, id: str, pre: int, _graph) -> {str: {"pre":int, "min":int}}:
+def depth_first_search(points: {str: {"pre":int, "min":int, "prev": str}}, id: str, pre: int, _graph) -> [{"bridge_from": str, "bridge_to": str}]:
     """深さ優先探索をする。（行きがけ順、最小値を保存する）
 
     Args:
@@ -51,23 +50,34 @@ def depth_first_search(points: {str: {"pre":int, "min":int}}, id: str, pre: int,
     """
 
     # 開始地点をスタックに積む
-    stack = [list(points.items())[0]]
+    initPlace = list(points.items())[0]
+    stack = [initPlace[0]]
     points[stack[0][0]]["pre"] = 0
+    points[stack[0][0]]["min"] = 0
+
+    bridges: [{"bridge_from": str, "bridge_to": str}] = []
 
     # スタックが空になったら終了
     while stack:
         # 現在地を取得
-        current = stack.pop()
-        print(current)
-        print("from " + current[0] + ", to: " + str(_graph[current[0]]))
-        for adj in _graph[current[0]]:
-            if points[adj]["pre"] == float('inf'):
-                points[adj]["pre"] = pre
-                points[adj]["min"] = pre
-                pre += 1
-                stack.append((adj, points[adj]))
-            _graph[adj].sort(key=lambda x : points[x]["min"])
-            print(points[_graph[adj][0]]["min"], points[adj]["min"])
-            points[adj]["min"] = points[_graph[adj][0]]["min"] if points[_graph[adj][0]]["min"] < points[adj]["min"] else points[adj]["min"]
+        current = stack[-1]
+        nears = list(filter(lambda x : points[x]["pre"] == float('inf'), _graph[current[0]]))
+        
+        if nears:
+            points[nears[0]]["pre"] = pre
+            points[nears[0]]["min"] = pre
+            points[nears[0]]["prev"] = current[0]
+            pre += 1
+            stack.append((nears[0], points[nears[0]]))
+        else:
+            adj = list(filter(lambda x : points[x]["pre"] != float('inf'), _graph[current[0]]))
+            tmp = list(filter(lambda x : points[x]["pre"] != current[1]["pre"] - 1, adj))
+            if tmp:
+                tmp.sort(key=lambda x : points[x]["min"])
+                points[current[0]]["min"] = points[tmp[0]]["min"]
+            stack.pop()
+    bridge_tos = list(filter(lambda x : x["pre"] == x["min"] and (x["pre"] != initPlace["pre"]), points))
+    for bridge_to in bridge_tos:
+        bridges.append({"bridge_from": points[bridge_to]["prev"], "bridge_to": bridge_to})
 
-    print(points)
+    return bridges
