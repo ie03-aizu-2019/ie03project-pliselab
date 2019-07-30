@@ -68,5 +68,7 @@ if mode == '7':
     for point in additional_points:
         print(rc.suggest_optional_road(sides, point))
 
-# 橋の検出テスト
-print(rc.find_bridge(sides, points, cross_points))
+# 小課題8
+if mode == '8':
+    for road in rc.find_bridge(sides, points, cross_points):
+        print(f'{road["bridge_from"]} {road["bridge_to"]}')
