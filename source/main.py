@@ -59,7 +59,8 @@ def run():
     # 小課題2
     # 交差地点の列挙
     cross_points = rc.list_cross_point(sides)
-    if mode == '2':
+    if mode == '2' or mode == 'all':
+        print("cross points:")
         for point in cross_points:
             print(point)
 
@@ -73,21 +74,29 @@ def run():
     # 小課題3,4,5,6
     for i in range(Q):
         f_id, t_id, k = input().split()
-        if mode == '3' or mode == '4':
+        if mode == '3' or mode == '4' or mode == 'all':
+            print('decide shortest path')
             for dist, path in rc.decide_k_shortest_path(f_id, t_id, V, int(k)):
                 print(f'{dist:.6g}' if dist != math.inf else "NA")
-                if mode == '4' and dist != math.inf:
+                if (mode == '4' or mode == 'all') and dist != math.inf:
                     print(' '.join(path))
 
+    bridges = rc.find_bridge(sides, points, cross_points)
+
     # 小課題7
-    if mode == '7':
+    if mode == '7' or mode == 'all':
+        print('suggest new road:')
         for point in additional_points:
-            print(rc.suggest_optional_road(sides, point))
+            res = rc.suggest_optional_road(sides, point)
+            if res is not None:
+                print(res)
 
     # 小課題8
-    if mode == '8':
-        for road in rc.find_bridge(sides, points, cross_points):
-            print(f'{road["bridge_from"]} {road["bridge_to"]}')
+    if mode == '8' or mode == 'all':
+        print('main road')
+        for road in bridges:
+            if road["bridge_from"] is not None and road["bridge_to"] is not None:
+                print(f'{road["bridge_from"]} {road["bridge_to"]}')
 
 
 def interactive():
